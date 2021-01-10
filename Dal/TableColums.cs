@@ -12,7 +12,7 @@ namespace Dal
     {
         public static List<ColumnData> Query()
         {
-            string connStr = @"Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=191.168.0.63)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=xir63)));Persist Security Info=True;User ID=xir_trd;Password=xpar;";
+            string connStr = @"";
             OracleConnection conn = new OracleConnection(connStr);
             conn.Open();
             string sql = "select * from user_tab_columns where table_name='TTRD_CDS'";
