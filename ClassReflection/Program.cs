@@ -12,7 +12,7 @@ namespace ClassReflection
     {
         static void Main(string[] args)
         {
-            #region MyRegion
+            #region 拼接字符串生成类
             //List<ColumnData> columnDatas = new ColumnManager().GetColumns();
             //string aa = string.Empty;
             //Dictionary<string, string> typeDict = new Dictionary<string, string>
@@ -36,17 +36,17 @@ namespace ClassReflection
             //strBuilder.AppendLine("}");
             //Console.WriteLine(columnDatas.Count);
             //aa = strBuilder.ToString();
-            //foreach (var item in columnDatas)
-            //{
-            //    Console.WriteLine(item.ColumnName + "  " + item.ColumnType);
-            //} 
             #endregion
 
-            BuildClass();
+            BuildClass("TTRD_CDS");
             Console.ReadKey();
         }
 
-        public static void BuildClass()
+        /// <summary>
+        /// 构建类
+        /// </summary>
+        /// <param name="className"></param>
+        public static void BuildClass(string className)
         {
             // 代码编译器单元
             CodeCompileUnit unit = new CodeCompileUnit();
@@ -58,7 +58,7 @@ namespace ClassReflection
             myNamespace.Imports.Add(new CodeNamespaceImport("System"));
 
             // 代码体
-            CodeTypeDeclaration myClass = new CodeTypeDeclaration("TTRD_CDS");
+            CodeTypeDeclaration myClass = new CodeTypeDeclaration(className);
 
             // 指定为类
             myClass.IsClass = true;
@@ -106,9 +106,6 @@ namespace ClassReflection
                 property.HasGet = true;
                 property.HasSet = true;
 
-                //property.GetStatements.Add(new CodeStatement());
-                //property.SetStatements.Add(new CodeStatement());
-
                 property.GetStatements.Add(new CodeMethodReturnStatement(new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), fieldName)));
                 property.SetStatements.Add(new CodeAssignStatement(new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), fieldName), new CodePropertySetValueReferenceExpression()));
 
@@ -128,7 +125,7 @@ namespace ClassReflection
             options.BlankLinesBetweenMembers = true;
 
             // 输出文件路径
-            string outputFile = @"C:\Users\Administrator\source\repos\ClassReflection3\Model\" + "TTRD_CDS" + ".cs";
+            string outputFile = @"C:\Users\Administrator\source\repos\ClassReflection3\Model\" + className + ".cs";
 
             // 保存流
             using (StreamWriter sw = new StreamWriter(outputFile))
@@ -139,6 +136,11 @@ namespace ClassReflection
             }
         }
 
+        /// <summary>
+        /// 数据库类型映射
+        /// </summary>
+        /// <param name="columnType">字段类型</param>
+        /// <returns>类型</returns>
         public static CodeTypeReference GetPropertyType(string columnType)
         {
             CodeTypeReference codeType = new CodeTypeReference();
@@ -153,6 +155,7 @@ namespace ClassReflection
                     codeType = new CodeTypeReference(typeof(System.String));
                     break;
                 default:
+                    codeType = new CodeTypeReference(typeof(System.String));
                     break;
             }
 
